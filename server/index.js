@@ -11,7 +11,14 @@ const Problem = require('./models/Problem');
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: process.env.FRONTEND_ORIGIN || '*' }));
+app.use(cors({
+  origin: [
+    "http://localhost:5173",              // local dev
+    "https://dsa-sheet-2.onrender.com"    // deployed frontend
+  ],
+  credentials: true,
+}));
+
 app.use(express.json());
 
 // connect
