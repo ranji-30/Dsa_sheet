@@ -3,9 +3,17 @@ import Navbar from "../components/Navbar";
 
 
 export default function Dashboard() {
- const storedUser = localStorage.getItem("user");
-  const user = storedUser ? JSON.parse(storedUser) : null;
-console.log(user)
+const storedUser = localStorage.getItem("user");
+
+let user = null;
+try {
+  if (storedUser && storedUser !== "undefined") {
+    user = JSON.parse(storedUser);
+  }
+} catch (err) {
+  console.error("Failed to parse user from localStorage", err);
+}
+
 
   return (
     <div>

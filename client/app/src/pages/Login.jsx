@@ -11,8 +11,9 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      console.log('hi');
       const res = await API.post("/auth/login", { email, password });
-
+console.log(res)
       // Save both token + user info
       localStorage.setItem("token", res.data.accessToken);
       localStorage.setItem("user", JSON.stringify(res.data.user)); 

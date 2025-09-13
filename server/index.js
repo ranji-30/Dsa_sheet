@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Connected to MongoDB Atlas"))
 .catch(err => console.error("❌ Error:", err));
 
-// simple health
+
 app.get("/", (req, res) => {
   res.send("Backend is running! Use API endpoints at /api/...");
 });
