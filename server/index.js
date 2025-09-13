@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('./models/user');
+const User = require('./models/User');
 const Progress = require('./models/Progress');
 const Topic = require('./models/Topic');
 const Problem = require('./models/Problem');
@@ -16,8 +16,8 @@ app.use(express.json());
 
 // connect
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.error("MongoDB Connection Error:", err));
+  .then(() => console.log("✅ Connected to MongoDB Atlas"))
+.catch(err => console.error("❌ Error:", err));
 
 // simple health
 app.get('/api/health', (req,res)=> res.json({ ok: true }));
