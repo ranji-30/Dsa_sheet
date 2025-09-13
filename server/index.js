@@ -27,7 +27,9 @@ mongoose.connect(process.env.MONGO_URI)
 .catch(err => console.error("❌ Error:", err));
 
 // simple health
-app.get('/api/health', (req,res)=> res.json({ ok: true }));
+app.get("/", (req, res) => {
+  res.send("Backend is running! Use API endpoints at /api/...");
+});
 
 // register
 app.post('/api/auth/register', async (req,res)=>{
