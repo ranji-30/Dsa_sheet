@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://dsa-sheet-8g1e.onrender.com/api", // change to AWS backend later
+  baseURL: import.meta.env.VITE_API_BASE_URL, // picks dev or prod
 });
 
 export default API;
