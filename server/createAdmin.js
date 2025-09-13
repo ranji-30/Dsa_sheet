@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
-const User = require('./models/user');
+const User = require('./models/User');
 require('dotenv').config(); // load .env if using process.env.MONGO_URI
 
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/dsa_sheet')
