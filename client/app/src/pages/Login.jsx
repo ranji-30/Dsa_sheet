@@ -13,7 +13,8 @@ export default function Login() {
     try {
       console.log('hi');
       const res = await API.post("/auth/login", { email, password });
-console.log(res)
+console.log(res.data)
+console.log(API)
       // Save both token + user info
       localStorage.setItem("token", res.data.accessToken);
       localStorage.setItem("user", JSON.stringify(res.data.user)); 

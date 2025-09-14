@@ -11,15 +11,16 @@ const Problem = require('./models/Problem');
 dotenv.config();
 
 const app = express();
+
+
+app.use(express.json());
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",              // local dev
-    "https://dsa-sheet-2.onrender.com"    // deployed frontend
-  ],
+  origin: [process.env.FRONTEND_ORIGIN, "http://localhost:5173"],
   credentials: true,
 }));
 
-app.use(express.json());
+
 
 // connect
 mongoose.connect(process.env.MONGO_URI)
@@ -31,47 +32,7 @@ app.get("/", (req, res) => {
   res.send("Backend is running! Use API endpoints at /api/...");
 });
 
-// register
-app.post('/api/auth/register', async (req,res)=>{
-  const { email, password, name, role } = req.body;
-  if(!email || !password) return res.status(400).json({ error: 'email+password required' });
 
-  const exists = await User.findOne({ email });
-  if (exists) return res.status(400).json({ error: 'email exists' });
-
-  const hash = await bcrypt.hash(password, 10);
-
-  // role defaults to "student"
-  const user = await User.create({ 
-    email, 
-    passwordHash: hash, 
-    name,
-    role: role || "student"
-  });
-
-  res.json({ id: user._id, email: user.email, name: user.name, role: user.role });
-});
-
-// login
-app.post('/api/auth/login', async (req,res)=>{
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(401).json({ error: 'invalid' });
-
-  const ok = await bcrypt.compare(password, user.passwordHash);
-  if (!ok) return res.status(401).json({ error: 'invalid' });
-
-  const token = jwt.sign(
-    { id: user._id, email: user.email, role: user.role }, 
-    process.env.ACCESS_SECRET,
-    { expiresIn: '7d' }
-  );
-
-  res.json({
-    accessToken: token,
-    user: { id: user._id, email: user.email, name: user.name, role: user.role }
-  });
-});
 
 // ================== AUTH MIDDLEWARE ==================
 function auth(req,res,next){
@@ -94,6 +55,59 @@ function adminOnly(req,res,next) {
   }
   next();
 }
+
+// register
+app.post('/api/auth/signup', async (req,res)=>{
+  const { email, password, name, role } = req.body;
+  if(!email || !password) return res.status(400).json({ error: 'email+password required' });
+
+  const exists = await User.findOne({ email });
+  if (exists) return res.status(400).json({ error: 'email exists' });
+
+  const hash = await bcrypt.hash(password, 10);
+
+  // role defaults to "student"
+  const user = await User.create({ 
+    email, 
+    passwordHash: hash, 
+    name,
+    role: role || "student"
+  });
+
+  res.json({ id: user._id, email: user.email, name: user.name, role: user.role });
+});
+
+// login
+// login
+app.post('/api/auth/login', async (req, res) => {
+  const { email, password } = req.body;
+  console.log("Login attempt:", email, password);
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    console.log("User not found");
+    return res.status(401).json({ error: 'invalid' });
+  }
+
+  const ok = await bcrypt.compare(password, user.passwordHash);
+  console.log("Password match?", ok);
+
+  if (!ok) return res.status(401).json({ error: 'invalid' });
+
+  const token = jwt.sign(
+    { id: user._id, email: user.email, role: user.role },
+    process.env.ACCESS_SECRET,
+    { expiresIn: '7d' }
+  );
+
+  res.json({
+    accessToken: token,
+    user: { id: user._id, email: user.email, name: user.name, role: user.role }
+  });
+});
+
+
+
 
 // ================== USER PROGRESS ==================
 // ================== PROGRESS SUMMARY ==================
