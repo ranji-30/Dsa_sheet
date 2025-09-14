@@ -57,7 +57,7 @@ function adminOnly(req,res,next) {
 }
 
 // register
-app.post('/api/auth/signup', async (req,res)=>{
+app.post('/api/auth/register', async (req,res)=>{
   const { email, password, name, role } = req.body;
   if(!email || !password) return res.status(400).json({ error: 'email+password required' });
 
