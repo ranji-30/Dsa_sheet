@@ -24,8 +24,12 @@ app.use(cors({
 
 // connect
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ Connected to MongoDB Atlas"))
-.catch(err => console.error("❌ Error:", err));
+  .then(() => {
+    console.log("✅ Connected to MongoDB Atlas");
+    console.log("DB Name:", mongoose.connection.name); // <-- shows actual DB name
+  })
+  .catch(err => console.error("❌ Error:", err));
+
 
 
 app.get("/", (req, res) => {
